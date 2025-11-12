@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 
+# plt.style.use("seaborn-v0_8-whitegrid")  
 st.set_page_config(page_title="Sampling Distribution Demo", layout="centered")
 
 st.title("🎲 Sampling Distribution of the Mean")
@@ -84,21 +85,22 @@ sk = stats.skew(sample_means)
 ku = stats.kurtosis(sample_means)
 
 
-st.markdown("### Distribution Metrics")
+with st.sidebar:
+    st.header("📏 Distribution Metrics")
 
-# Arrange in two rows
-colA, colB, colC, colD = st.columns(4)
-colA.metric("Population Mean (μ)", f"{pop_mean:.4f}")
-colB.metric("Simulated Mean (ȳ̄)", f"{sample_mean:.4f}")
-colC.metric("Theoretical SE (σ/√n)", f"{se_theoretical:.4f}")
+    col1, col2 = st.columns(2)
+    col1.metric("Population mean (𝜇)", f"{pop_mean:.3f}")
+    col2.metric("Simulated mean ȳ̄", f"{sample_mean:.3f}")
 
-colD.metric("Simulated SD (s₍ȳ₎)", f"{sample_sd:.4f}")
+    col3, col4 = st.columns(2)
+    col3.metric("Theoretical SE", f"{se_theoretical:.3f}")
+    col4.metric("simulated SD s₍ȳ₎", f"{sample_sd:.3f}")
 
-st.markdown("### Normality Metrics")
-col1, col2 = st.columns(2)
-col1.metric("Skewness", f"{stats.skew(sample_means):.3f}")
-col2.metric("Kurtosis", f"{stats.kurtosis(sample_means):.3f}")
-
+    st.markdown("---")
+    st.header("📊 Normality")
+    col5, col6 = st.columns(2)
+    col5.metric("Skewness", f"{sk:.2f}")
+    col6.metric("Kurtosis", f"{ku:.2f}")
 
 # --- Discussion ---
 st.markdown(
