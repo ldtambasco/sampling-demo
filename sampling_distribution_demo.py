@@ -8,11 +8,15 @@ st.set_page_config(page_title="Sampling Distribution Demo", layout="centered")
 
 st.title("🎲 Sampling Distribution of the Mean")
 
-# --- Controls ---
+# --- Controls for population shape ---
 shape = st.slider(
-    "Population shape: Symmetric  ←→  Skewed",
+    "Population skew: Symmetric ←→ Skewed",
     min_value=0.0, max_value=1.0, value=0.0, step=0.01,
-    help="0 = Normal (symmetric), 1 = Exponential (right-skewed)"
+)
+uniformity = st.slider(
+    "Population shape: Uniform ←→ Normal",
+    min_value=0.0, max_value=1.0, value=0.0, step=0.01,
+    help="0 = Uniform, 1 = Normal (Gaussian)"
 )
 n = st.slider(
     "Sample size n",
@@ -26,14 +30,19 @@ num_samples = st.slider(
 
 # --- Generate population ---
 N = 100_000
-if shape < 0.5:
-    # Blend Normal (mean=0) with mild skew
-    skew_factor = shape * 4
-    pop = np.random.normal(0, 1, N) + skew_factor * np.random.normal(0, 1, N)**3 * 0.1
+
+# Base: blend between uniform and normal
+uniform_pop = np.random.uniform(-1, 1, N)
+normal_pop = np.random.normal(0, 1, N)
+base = (1 - uniformity) * uniform_pop + uniformity * normal_pop
+
+# Add skew if requested
+if shape > 0:
+    skew_factor = shape * 2
+    exp_component = np.random.exponential(1, N) - 1
+    pop = (1 - shape) * base + shape * exp_component
 else:
-    # Blend Normal with Exponential (right skew)
-    skew_factor = (shape - 0.5) * 2
-    pop = (1 - skew_factor) * np.random.normal(0, 1, N) + skew_factor * np.random.exponential(1, N)
+    pop = base
 
 pop_mean = np.mean(pop)
 
