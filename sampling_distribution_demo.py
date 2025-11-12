@@ -78,6 +78,22 @@ axes[2].set_title("Q–Q Plot vs Normal")
 plt.tight_layout()
 st.pyplot(fig)
 
+
+# Normality metrics
+sk = stats.skew(sample_means)
+ku = stats.kurtosis(sample_means)
+
+
+st.markdown("### Distribution Metrics")
+
+# Arrange in two rows
+colA, colB, colC, colD = st.columns(4)
+colA.metric("Population Mean (μ)", f"{pop_mean:.4f}")
+colB.metric("Simulated Mean (ȳ̄)", f"{sample_mean:.4f}")
+colC.metric("Theoretical SE (σ/√n)", f"{se_theoretical:.4f}")
+
+colD.metric("Simulated SD (s₍ȳ₎)", f"{sample_sd:.4f}")
+
 st.markdown("### Normality Metrics")
 col1, col2 = st.columns(2)
 col1.metric("Skewness", f"{stats.skew(sample_means):.3f}")
