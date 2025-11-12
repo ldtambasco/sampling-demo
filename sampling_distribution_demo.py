@@ -29,7 +29,7 @@ num_samples = st.slider(
 )
 
 # --- Generate population ---
-N = 100_000
+N = 10_000_000
 
 # Base: blend between uniform and normal
 uniform_pop = np.random.uniform(-1, 1, N)
@@ -77,6 +77,12 @@ axes[2].set_title("Q–Q Plot vs Normal")
 
 plt.tight_layout()
 st.pyplot(fig)
+
+st.markdown("### Normality Metrics")
+col1, col2 = st.columns(2)
+col1.metric("Skewness", f"{stats.skew(sample_means):.3f}")
+col2.metric("Kurtosis", f"{stats.kurtosis(sample_means):.3f}")
+
 
 # --- Discussion ---
 st.markdown(
